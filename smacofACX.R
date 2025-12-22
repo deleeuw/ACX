@@ -50,6 +50,7 @@ smacofACX <- function(delta,
     d1 <- x1 - xold
     d2 <- x2 - 2 * x1 + xold
     if (pk == 0) {
+      sigd <- 0
       xnew <- x1
     }
     if (pk == 1) {
@@ -70,8 +71,10 @@ smacofACX <- function(delta,
     if (safe && (f1 < fnew)) {
       fnew <- f1
       xnew <- x1
+      sigd <- 0
       pk <- 0
     }
+    
     difx <- max(abs(xold - xnew))
     if (verbose) {
       cat(
@@ -82,6 +85,13 @@ smacofACX <- function(delta,
           format = "d",
           digits = 1,
           width = 1
+        ),
+        "sigd",
+        formatC(
+          sigd,
+          format = "f",
+          width = width,
+          digits = digits
         ),
         "difx",
         formatC(
