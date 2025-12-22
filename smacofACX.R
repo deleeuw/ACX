@@ -9,17 +9,17 @@ torgerson <- function(delta, ndim = 2) {
   return(ev$vectors[, 1:ndim] %*% diag(sqrt(ev$values[1:ndim])))
 }
 
-guttman <- function(x) {
+guttman <- function(x, delta, wght, vinv) {
   n <- nrow(x)
   dmat <- as.matrix(dist(x))
-  emat <- -wmat * delta / (dmat + diag(n))
+  emat <- -wght * delta / (dmat + diag(n))
   diag(emat) <- -rowSums(emat)
   return(vinv %*% emat %*% x)
 }
 
-loss <- function(x) {
+loss <- function(x, delta, wght) {
   dmat <- as.matrix(dist(x))
-  return(sum(wmat * (delta - dmat)^2))
+  return(sum(wght * (delta - dmat)^2))
 }
 
 smacofACX <- function(delta,
@@ -34,19 +34,19 @@ smacofACX <- function(delta,
                       mono = TRUE,
                       verbose = TRUE) {
   itel <- 0
-  nobj <- nrow(deltat())
+  nobj <- nrow(delta)
   p <- length(ord)
   vmat <- -wght
   diag(vmat) <- -rowSums(vmat)
   vinv <- solve(vmat + (1 / nobj)) - (1 / nobj)
   xold <- xini
-  fold <- loss(xold)
+  fold <- loss(xold, delta, wght)
   repeat {
     pk <- ord[itel %% p + 1]
     d0 <- xold
-    x1 <- guttman(xold)
-    x2 <- guttman(x1)
-    f1 <- loss(x1)
+    x1 <- guttman(xold, delta, wght, vinv)
+    x2 <- guttman(x1, delta, wght, vinv)
+    f1 <- loss(x1, delta, wght)
     d1 <- x1 - xold
     d2 <- x2 - 2 * x1 + xold
     if (pk == 0) {
@@ -61,12 +61,12 @@ smacofACX <- function(delta,
       xnew <- d0 + sigd * d1 + sigd^2 * d2
     }
     if (pk == 3) {
-      x3 <- guttman(x2)
+      x3 <- guttman(x2, delta, wght, vinv)
       d3 <- x3 - 3 * x2 + 3 * x1 - xold
       sigd <- abs(sum(d3 * d2)) / sum(d3^2)
       xnew <- d0 + 3 * sigd * d1 + 3 * sigd^2 * d2 + sigd^3 * d3
     }
-    fnew <- loss(xnew)
+    fnew <- loss(xnew, delta, wght)
     if (mono && (f1 < fnew)) {
       fnew <- f1
       xnew <- x1
