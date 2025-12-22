@@ -29,9 +29,9 @@ smacofACX <- function(delta,
                       ord = c(0, 3),
                       width = 12,
                       digits = 10,
-                      itmax = 100,
+                      itmax = 1000,
                       eps = 1e-6,
-                      mono = TRUE,
+                      safe = TRUE,
                       verbose = TRUE) {
   itel <- 0
   nobj <- nrow(delta)
@@ -67,7 +67,7 @@ smacofACX <- function(delta,
       xnew <- d0 + 3 * sigd * d1 + 3 * sigd^2 * d2 + sigd^3 * d3
     }
     fnew <- loss(xnew, delta, wght)
-    if (mono && (f1 < fnew)) {
+    if (safe && (f1 < fnew)) {
       fnew <- f1
       xnew <- x1
       pk <- 0
