@@ -67,7 +67,22 @@ appreciated, but is not required. The files can be found at
 
 @lepage_saucier_24
 
+\begin{align}
+\Delta_0^{(k)}&=X^{(k)},\\
+\Delta_1^{(k)}&=\Gamma(X^{(k)})-X^{(k)},\\
+\Delta_2^{(k)}&=\Gamma^2(X^{(k)})-2\Gamma(X^{(k)})+X^{(k)},\\
+\Delta_3^{(k)}&=\Gamma^3(X^{(k)})-3\Gamma^2(X^{(k)})+3\Gamma(X^{(k)})-X^{(k)}.
+\end{align}
+
+
 # Iterations
+
+We iterate a maximum of 1000 times and we stop if the sup-norm $\|X^{(k+1)}-X^{(k)}\|_\infty$ is less than  $10^{-6}$. This is a much stricter stop citerium as the one used in *smacof*, which stops if the change in loss function value 
+$\sigma^{(k)}-\sigma^{(k+1)}$ is less than 
+$10^{-6}$.
+
+
+## Strategy x
 
 ```{r xF, echo = FALSE}
 he0 <- smacofACX(ekman, ord = 0, verbose = FALSE, safe = FALSE)
@@ -119,27 +134,7 @@ kable(h, row.names = TRUE, col.names = c("(0,0)", "(1,1)", "(2,2)", "(3,3)"),
       caption = "strategy (x), safe = TRUE")
 ```
 
-```{r 0xT, echo = FALSE}
-he1 <- smacofACX(ekman, ord = c(0,1), verbose = FALSE, safe = TRUE)
-he2 <- smacofACX(ekman, ord = c(0,2), verbose = FALSE, safe = TRUE)
-he3 <- smacofACX(ekman, ord = c(0,3), verbose = FALSE, safe = TRUE)
-hg1 <- smacofACX(gruijter, ord = c(0,1), verbose = FALSE, safe = TRUE)
-hg2 <- smacofACX(gruijter, ord = c(0,2), verbose = FALSE, safe = TRUE)
-hg3 <- smacofACX(gruijter, ord = c(0,3), verbose = FALSE, safe = TRUE)
-hm1 <- smacofACX(morse, ord = c(0,1), verbose = FALSE, safe = TRUE)
-hm2 <- smacofACX(morse, ord = c(0,2), verbose = FALSE, safe = TRUE)
-hm3 <- smacofACX(morse, ord = c(0,3), verbose = FALSE, safe = TRUE)
-h<-matrix(c(he0$itel, he1$itel, he2$itel, he3$itel,
-        hg0$itel, hg1$itel, hg2$itel, hg3$itel,
-        hm0$itel, hm1$itel, hm2$itel, hm3$itel
-        ), 3, 4, byrow = TRUE)
-row.names(h) <- c("ekman", "gruijter", "morse")
-```
-
-```{r k0xT, echo = FALSE, tab.align = "center"}
-kable(h, row.names = TRUE, col.names = c("(0,0)", "(0,1)", "(0,2)", "(0,3)"),
-      caption = "strategy (0,x), safe = TRUE")
-```
+## Strategy 0x
 
 ```{r 0xF, echo = FALSE}
 he1 <- smacofACX(ekman, ord = c(0,1), verbose = FALSE, safe = FALSE)
@@ -163,16 +158,17 @@ kable(h, row.names = TRUE, col.names = c("(0,0)", "(0,1)", "(0,2)", "(0,3)"),
       caption = "strategy (0,x), safe = FALSE")
 ```
 
-```{r xxT, echo = FALSE}
-he1 <- smacofACX(ekman, ord = c(1,1), verbose = FALSE, safe = TRUE)
-he2 <- smacofACX(ekman, ord = c(2,2), verbose = FALSE, safe = TRUE)
-he3 <- smacofACX(ekman, ord = c(3,3), verbose = FALSE, safe = TRUE)
-hg1 <- smacofACX(gruijter, ord = c(1,1), verbose = FALSE, safe = TRUE)
-hg2 <- smacofACX(gruijter, ord = c(2,2), verbose = FALSE, safe = TRUE)
-hg3 <- smacofACX(gruijter, ord = c(3,3), verbose = FALSE, safe = TRUE)
-hm1 <- smacofACX(morse, ord = c(1,1), verbose = FALSE, safe = TRUE)
-hm2 <- smacofACX(morse, ord = c(2,2), verbose = FALSE, safe = TRUE)
-hm3 <- smacofACX(morse, ord = c(3,3), verbose = FALSE, safe = TRUE)
+
+```{r 0xT, echo = FALSE}
+he1 <- smacofACX(ekman, ord = c(0,1), verbose = FALSE, safe = TRUE)
+he2 <- smacofACX(ekman, ord = c(0,2), verbose = FALSE, safe = TRUE)
+he3 <- smacofACX(ekman, ord = c(0,3), verbose = FALSE, safe = TRUE)
+hg1 <- smacofACX(gruijter, ord = c(0,1), verbose = FALSE, safe = TRUE)
+hg2 <- smacofACX(gruijter, ord = c(0,2), verbose = FALSE, safe = TRUE)
+hg3 <- smacofACX(gruijter, ord = c(0,3), verbose = FALSE, safe = TRUE)
+hm1 <- smacofACX(morse, ord = c(0,1), verbose = FALSE, safe = TRUE)
+hm2 <- smacofACX(morse, ord = c(0,2), verbose = FALSE, safe = TRUE)
+hm3 <- smacofACX(morse, ord = c(0,3), verbose = FALSE, safe = TRUE)
 h<-matrix(c(he0$itel, he1$itel, he2$itel, he3$itel,
         hg0$itel, hg1$itel, hg2$itel, hg3$itel,
         hm0$itel, hm1$itel, hm2$itel, hm3$itel
@@ -180,10 +176,13 @@ h<-matrix(c(he0$itel, he1$itel, he2$itel, he3$itel,
 row.names(h) <- c("ekman", "gruijter", "morse")
 ```
 
-```{r kxxT, echo = FALSE, tab.align = "center"}
-kable(h, row.names = TRUE, col.names = c("(0,0)", "(1,1)", "(2,2)", "(3,3)"),
-      caption = "strategy (x,x), safe = TRUE")
+```{r k0xT, echo = FALSE, tab.align = "center"}
+kable(h, row.names = TRUE, col.names = c("(0,0)", "(0,1)", "(0,2)", "(0,3)"),
+      caption = "strategy (0,x), safe = TRUE")
 ```
+
+
+## Strategy xx
 
 ```{r xxF, echo = FALSE}
 he1 <- smacofACX(ekman, ord = c(1,1), verbose = FALSE, safe = FALSE)
@@ -206,6 +205,30 @@ row.names(h) <- c("ekman", "gruijter", "morse")
 kable(h, row.names = TRUE, col.names = c("(0,0)", "(1,1)", "(2,2)", "(3,3)"),
       caption = "strategy (x,x), safe = FALSE")
 ```
+
+
+```{r xxT, echo = FALSE}
+he1 <- smacofACX(ekman, ord = c(1,1), verbose = FALSE, safe = TRUE)
+he2 <- smacofACX(ekman, ord = c(2,2), verbose = FALSE, safe = TRUE)
+he3 <- smacofACX(ekman, ord = c(3,3), verbose = FALSE, safe = TRUE)
+hg1 <- smacofACX(gruijter, ord = c(1,1), verbose = FALSE, safe = TRUE)
+hg2 <- smacofACX(gruijter, ord = c(2,2), verbose = FALSE, safe = TRUE)
+hg3 <- smacofACX(gruijter, ord = c(3,3), verbose = FALSE, safe = TRUE)
+hm1 <- smacofACX(morse, ord = c(1,1), verbose = FALSE, safe = TRUE)
+hm2 <- smacofACX(morse, ord = c(2,2), verbose = FALSE, safe = TRUE)
+hm3 <- smacofACX(morse, ord = c(3,3), verbose = FALSE, safe = TRUE)
+h<-matrix(c(he0$itel, he1$itel, he2$itel, he3$itel,
+        hg0$itel, hg1$itel, hg2$itel, hg3$itel,
+        hm0$itel, hm1$itel, hm2$itel, hm3$itel
+        ), 3, 4, byrow = TRUE)
+row.names(h) <- c("ekman", "gruijter", "morse")
+```
+
+```{r kxxT, echo = FALSE, tab.align = "center"}
+kable(h, row.names = TRUE, col.names = c("(0,0)", "(1,1)", "(2,2)", "(3,3)"),
+      caption = "strategy (x,x), safe = TRUE")
+```
+
 
 \sectionbreak 
 
