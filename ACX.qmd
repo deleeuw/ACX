@@ -1,7 +1,5 @@
 ---
-title: |
-    | The Title
-    | More Title
+title: Alternating Cyclic Vector Extrapolation for MDS Acceleration
 author: 
     - name: Jan de Leeuw
       orcid: 0000-0003-1420-1797
