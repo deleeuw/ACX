@@ -35,10 +35,11 @@ toc: true
 toc-depth: 3
 editor: source
 papersize: letter
-graphics: true
+graphics: true 
 link-citations: true
 mainfont: Times New Roman
-abstract: TBD
+abstract: We use a new cyclic vector extrapolation method due to Nicolas Lepage-Saucier to accelerate   convergence of smacof iterations in Multidimensional Scaling. Software, written in R, is used to
+  compare the effect of various strategies on the number of iterations and the time to convergence.
 ---
 
 ```{r loadpackages, echo = FALSE}
@@ -65,8 +66,12 @@ appreciated, but is not required. The files can be found at
 
 # Introduction
 
-@ramsay_75
-@groenen_glunt_hayden_96
+The standard iterative methods for Multidimensional Scaling (MDS), such as *smacof* (@deleeuw_mair_A_09c, @mair_groenen_deleeuw_A_22) and *ALSCAL* (@takane_young_deleeuw_A_77), can be quite slow to converge. Thus there have been various attempts to use standard numerical analysis
+techniques to accelerate MDS convergence. But none of these methods, despite of being quite successful, has been implemented in the usual MDS techniques.
+
+@ramsay_75 used multivariate Aitkin acceleration on various problems in psychometrics and statistics. including MDS.
+In @groenen_glunt_hayden_96 standard *smacof* iterations were compared with iterations of the
+spectral gradient method.
 @rosman_bronstein_bronstein_sidi_kimmel_08
 @deleeuw_R_06b
 @deleeuw_R_08i
@@ -339,7 +344,7 @@ row.names(mh) <- c("ekman", "gruijter", "morse")
 kable(mh, row.names = TRUE, col.names = c("(0,1)", "(0,2)", "(0,3)"),
       caption = "strategy (0,x), safe = TRUE")
 ```
-
+\sectionbreak
 # References
 
 
