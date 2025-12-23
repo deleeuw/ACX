@@ -123,7 +123,20 @@ X^{(k+1)}&=\Delta_0^{(k)}+3\lambda_3^{(k)}\Delta_1^{(k)}+3\left[\lambda_3^{(k)}\
 
 # Software
 
+```{r}
+args(smacofACX)
+```
+
+\sectionbreak
+
 # Comparing Strategies
+
+In this section we compare the strategies $(x)$ and $(0,x)$, where $x$
+is one of 0,1,2,3. Of course strategy $(0)$ is identical to strategy
+$(0,0)$, because both implement a sequence of ordinary smacof iterations. In addition we vary the *safe* parameter.
+
+
+## Data
 
 ## Number of Iterations
 
