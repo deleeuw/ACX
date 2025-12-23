@@ -59,7 +59,7 @@ smacofACX <- function(delta,
     }
     if (pk == 2) {
       sigd <- abs(sum(d2 * d1) / sum(d2^2))
-      xnew <- d0 + sigd * d1 + sigd^2 * d2
+      xnew <- d0 + 2 * sigd * d1 + sigd^2 * d2
     }
     if (pk == 3) {
       x3 <- guttman(x2, delta, wght, vinv)
