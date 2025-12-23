@@ -26,7 +26,7 @@ smacofACX <- function(delta,
                       wght = 1 - diag(nrow(delta)),
                       ndim = 2,
                       xini = torgerson(delta, ndim),
-                      ord = c(0, 3),
+                      strategy = c(0, 3),
                       width = 12,
                       digits = 10,
                       itmax = 1000,
@@ -35,14 +35,14 @@ smacofACX <- function(delta,
                       verbose = TRUE) {
   itel <- 0
   nobj <- nrow(delta)
-  p <- length(ord)
+  p <- length(strategy)
   vmat <- -wght
   diag(vmat) <- -rowSums(vmat)
   vinv <- solve(vmat + (1 / nobj)) - (1 / nobj)
   xold <- xini
   fold <- loss(xold, delta, wght)
   repeat {
-    pk <- ord[itel %% p + 1]
+    pk <- strategy[itel %% p + 1]
     d0 <- xold
     x1 <- guttman(xold, delta, wght, vinv)
     x2 <- guttman(x1, delta, wght, vinv)
@@ -74,7 +74,6 @@ smacofACX <- function(delta,
       sigd <- 0
       pk <- 0
     }
-    
     difx <- max(abs(xold - xnew))
     if (verbose) {
       cat(
