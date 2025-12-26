@@ -33,7 +33,7 @@ smacofACX <- function(delta,
                       eps = 1e-6,
                       safe = TRUE,
                       verbose = TRUE) {
-  itel <- 0
+  itel <- 1
   nobj <- nrow(delta)
   p <- length(strategy)
   vmat <- -wght
@@ -42,30 +42,33 @@ smacofACX <- function(delta,
   xold <- xini
   fold <- loss(xold, delta, wght)
   repeat {
-    pk <- strategy[itel %% p + 1]
+    pk <- strategy[(itel - 1) %% p + 1]
     d0 <- xold
     x1 <- guttman(xold, delta, wght, vinv)
-    x2 <- guttman(x1, delta, wght, vinv)
     f1 <- loss(x1, delta, wght)
-    d1 <- x1 - xold
-    d2 <- x2 - 2 * x1 + xold
     if (pk == 0) {
       sigd <- 0
       xnew <- x1
-    }
-    if (pk == 1) {
-      sigd <- abs(sum(d1 * d0) / sum(d1^2))
-      xnew <- x1 + sigd * d1
-    }
-    if (pk == 2) {
-      sigd <- abs(sum(d2 * d1) / sum(d2^2))
-      xnew <- d0 + 2 * sigd * d1 + sigd^2 * d2
-    }
-    if (pk == 3) {
-      x3 <- guttman(x2, delta, wght, vinv)
-      d3 <- x3 - 3 * x2 + 3 * x1 - xold
-      sigd <- abs(sum(d3 * d2)) / sum(d3^2)
-      xnew <- d0 + 3 * sigd * d1 + 3 * sigd^2 * d2 + sigd^3 * d3
+    } else {
+      d1 <- x1 - xold
+      if (pk == 1) {
+        sigd <- abs(sum(d1 * d0) / sum(d1^2))
+        xnew <- d0 + sigd * d1
+      } else {
+        x2 <- guttman(x1, delta, wght, vinv)
+        d2 <- x2 - 2 * x1 + xold
+        sigd <- abs(sum(d2 * d1) / sum(d2^2))
+        if (pk == 2) {
+          xnew <- d0 + 2 * sigd * d1 + sigd^2 * d2
+        } else {
+          x3 <- guttman(x2, delta, wght, vinv)
+          d3 <- x3 - 3 * x2 + 3 * x1 - xold
+          if (pk == 3) {
+            sigd <- abs(sum(d3 * d2)) / sum(d3^2)
+            xnew <- d0 + 3 * sigd * d1 + 3 * sigd^2 * d2 + sigd^3 * d3
+          }
+        }
+      }
     }
     fnew <- loss(xnew, delta, wght)
     if (safe && (f1 < fnew)) {
