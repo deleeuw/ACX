@@ -1,4 +1,7 @@
-data(morse, package = "smacof")
-morse <- as.matrix(morse)
+source("smacofDataUtilities.R")
 
+data(morse, package = "smacof")
+morseDist <- morse
+morseMatrix <- as.matrix(morse)
+morseData <- makeMDSData(morseDist)
 
