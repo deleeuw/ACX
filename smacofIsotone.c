@@ -123,6 +123,18 @@ void tieBlockAverages(const int* ndat, const int* nblk, int* blks, double* x,
     }
 }
 
+// Function monotone(),
+// performs simple linear ordered monotone regression
+// Copyright (C) 2020 Frank M.T.A. Busing (e-mail: busing at fsw dot leidenuniv
+// dot nl) This function is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation. This program is distributed in the hope that it
+// will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+// Public License for more details. You should have received a copy of the GNU
+// General Public License along with this function. If not, see
+// <https://www.gnu.org/licenses/>.
+
 void monotone(const int* n, double* x, double* w) {
     double* rx = &x[-1];
     double* rw = &w[-1];
