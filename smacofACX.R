@@ -1,7 +1,5 @@
 library(RSpectra)
 
-DEBUG <- 1
-
 torgerson <- function(delta, ndim = 2) {
   dd <- delta^2
   rd <- apply(dd, 1, mean)
@@ -59,50 +57,26 @@ smacofACX <- function(delta,
   diag(vmat) <- -rowSums(vmat)
   vinv <- solve(vmat + (1 / nobj)) - (1 / nobj)
   xold <- xinit
-  if (DEBUG) {
-    print("xold")
-    mPrint(xold)
-  }
   fold <- loss(xold, delta, wght)
   repeat {
     pk <- strategy[(itel - 1) %% p + 1]
     d0 <- xold
     x1 <- guttman(xold, delta, wght, vinv)
-    if (DEBUG) {
-      print("x1")
-      mPrint(x1)
-    }
     f1 <- loss(x1, delta, wght)
     if (pk == 0) {
       sigd <- 0
       xnew <- x1
     } else {
       d1 <- x1 - xold
-      if (DEBUG) {
-        print("d1")
-        mPrint(d1)
-      }
       if (pk == 1) {
         sigd <- abs(sum(d1 * d0) / sum(d1^2))
         xnew <- d0 + sigd * d1
       } else {
         x2 <- guttman(x1, delta, wght, vinv)
-        if (DEBUG) {
-          print("x2")
-          mPrint(x2)
-        }
         d2 <- x2 - 2 * x1 + xold
-        if (DEBUG) {
-          print("d2")
-          mPrint(d2)
-        }
         sigd <- abs(sum(d2 * d1) / sum(d2^2))
         if (pk == 2) {
           xnew <- d0 + 2 * sigd * d1 + sigd^2 * d2
-          if (DEBUG) {
-            print("xnew")
-            mPrint(xnew)
-          }
         } else {
           x3 <- guttman(x2, delta, wght, vinv)
           d3 <- x3 - 3 * x2 + 3 * x1 - xold

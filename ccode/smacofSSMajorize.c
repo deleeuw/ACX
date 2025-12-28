@@ -1,5 +1,4 @@
 #include "smacofSS.h"
-#define DEBUG 0
 
 void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
                       const int* itel, int *kord, const int* nord, int* iind, int* jind,
@@ -23,12 +22,6 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
         (void)smacofSSDistances(nobj, ndim, ndat, iind, jind, xone, edis);
         sone = smacofSSLoss(ndat, edis, dhat, wght);
     }
-    if (DEBUG) {
-        printf("xold\n");
-        (void)matrixPrint(xold, Nobj, Ndim, 6, 4);
-        printf("xone\n");
-        (void)matrixPrint(xone, Nobj, Ndim, 6, 4);
-    }
     if (Kord == 0) {
         for (int i = 0; i < ncor; i++) {
             xnew[i] = xone[i];
@@ -36,10 +29,6 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
     } else {
         for (int i = 0; i < ncor; i++) {
             done[i] = xone[i] - xold[i];
-        }
-        if (DEBUG) {
-            printf("done\n");
-            (void)matrixPrint(done, Nobj, Ndim, 6, 4);
         }
         if (Kord == 1) {
             double sum1 = 0.0, sum2 = 0.0;
@@ -55,16 +44,8 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
             (void)smacofSSGuttmanTransform(nobj, ndim, ndat, iind, jind,
                                            weighted, wght, vinv, dhat, xone,
                                            xtwo);
-            if (DEBUG) {
-                printf("xtwo\n");
-                (void)matrixPrint(xtwo, Nobj, Ndim, 6, 4);
-            }
             for (int i = 0; i < ncor; i++) {
                 dtwo[i] = xtwo[i] - 2.0 * xone[i] + xold[i];
-            }
-            if (DEBUG) {
-                printf("dtwo\n");
-                (void)matrixPrint(dtwo, Nobj, Ndim, 6, 4);
             }
             if (Kord == 2) {
                 double sum1 = 0.0, sum2 = 0.0;
@@ -76,10 +57,6 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
                 for (int i = 0; i < ncor; i++) {
                     xnew[i] =
                         xold[i] + 2 * sig2 * done[i] + SQUARE(sig2) * dtwo[i];
-                }
-                if (DEBUG) {
-                    printf("xnew\n");
-                    (void)matrixPrint(xnew, Nobj, Ndim, 6, 4);
                 }
             } else {
                 (void)smacofSSGuttmanTransform(nobj, ndim, ndat, iind, jind,

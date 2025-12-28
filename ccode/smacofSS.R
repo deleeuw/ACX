@@ -25,7 +25,7 @@ smacofSS <- function(theData,
   nobj <- theData$nobj
   ndat <- theData$ndat
   itel <- 1
-  kord <- 0
+  kord <- 2
   iind <- theData$iind
   jind <- theData$jind
   dhat <- theData$delta

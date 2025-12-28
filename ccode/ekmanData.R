@@ -1,5 +1,8 @@
+source("smacofDataUtilities.R")
+
 data(ekman, package = "smacof")
-ekman <- 1 - ekman
-ekmanData <- makeMDSData(ekman)
+ekmanDist <- 1 - ekman
+ekmanMatrix <- as.matrix(ekmanDist)
+ekmanData <- makeMDSData(ekmanDist)
 ekmanLabels <- as.character(attr(ekman, "Labels"))
 
