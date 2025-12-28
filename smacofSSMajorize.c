@@ -87,6 +87,7 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
         if (sone < snew) {
             for (int i = 0; i < ncor; i++) {
                 xnew[i] = xone[i];
+                Kord = 0;
             }
         }
     }
