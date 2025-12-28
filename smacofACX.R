@@ -1,6 +1,6 @@
 library(RSpectra)
 
-DEBUG <- 0
+DEBUG <- 1
 
 torgerson <- function(delta, ndim = 2) {
   dd <- delta^2

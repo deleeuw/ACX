@@ -2,12 +2,13 @@
 #define DEBUG 0
 
 void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
-                      const int* itel, const int* nord, int* iind, int* jind,
+                      const int* itel, int *kord, const int* nord, int* iind, int* jind,
                       const int* iord, const int* safe, const int* weighted,
                       double* wght, double* vinv, double* dhat, double* xold,
                       double* xnew) {
-    int Nobj = *nobj, Ndim = *ndim, Itel = *itel, Nord = *nord, Ndat = *ndat;
-    int kord = iord[(Itel - 1) % Nord], ncor = Nobj * Ndim, Safe = *safe;
+    int Nobj = *nobj, Ndim = *ndim, Itel = *itel, Nord = *nord, Ndat = *ndat, Kord = *kord;
+    Kord = iord[(Itel - 1) % Nord];
+    int ncor = Nobj * Ndim, Safe = *safe;
     double sone = 0.0, snew = 0.0;
     double* xone = xmalloc(Nobj * Ndim * sizeof(double));
     double* xtwo = xmalloc(Nobj * Ndim * sizeof(double));
@@ -19,7 +20,7 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
     (void)smacofSSGuttmanTransform(nobj, ndim, ndat, iind, jind, weighted, wght,
                                    vinv, dhat, xold, xone);
     if (Safe) {
-        (void)smacofSSDistances(nobj, ndim, ndat, iind, jind, xnew, edis);
+        (void)smacofSSDistances(nobj, ndim, ndat, iind, jind, xone, edis);
         sone = smacofSSLoss(ndat, edis, dhat, wght);
     }
     if (DEBUG) {
@@ -28,7 +29,7 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
         printf("xone\n");
         (void)matrixPrint(xone, Nobj, Ndim, 6, 4);
     }
-    if (kord == 0) {
+    if (Kord == 0) {
         for (int i = 0; i < ncor; i++) {
             xnew[i] = xone[i];
         }
@@ -40,7 +41,7 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
             printf("done\n");
             (void)matrixPrint(done, Nobj, Ndim, 6, 4);
         }
-        if (kord == 1) {
+        if (Kord == 1) {
             double sum1 = 0.0, sum2 = 0.0;
             for (int i = 0; i < ncor; i++) {
                 sum1 += xold[i] * done[i];
@@ -65,7 +66,7 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
                 printf("dtwo\n");
                 (void)matrixPrint(dtwo, Nobj, Ndim, 6, 4);
             }
-            if (kord == 2) {
+            if (Kord == 2) {
                 double sum1 = 0.0, sum2 = 0.0;
                 for (int i = 0; i < ncor; i++) {
                     sum1 += done[i] * dtwo[i];
@@ -87,7 +88,7 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
                 for (int i = 0; i < ncor; i++) {
                     dthr[i] = xthr[i] - 3.0 * xtwo[i] + 3.0 * xone[i] - xold[i];
                 }
-                if (kord == 3) {
+                if (Kord == 3) {
                     double sum1 = 0.0, sum2 = 0.0;
                     for (int i = 0; i < ncor; i++) {
                         sum1 += dtwo[i] * dthr[i];
@@ -119,6 +120,7 @@ void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
     xfree(dtwo);
     xfree(dthr);
     xfree(edis);
+    *kord = Kord;
     return;
 }
 
@@ -126,48 +128,41 @@ void smacofSSGuttmanTransform(const int* nobj, const int* ndim, const int* ndat,
                               int* iind, int* jind, const int* weighted,
                               double* wght, double* vinv, double* dhat,
                               double* xold, double* xnew) {
-    int Ndat = *ndat, Nobj = *nobj, Ndim = *ndim;
+    int Ndat = *ndat, Nobj = *nobj, Ndim = *ndim, Weighted = *weighted;
     double* xtmp = xmalloc(Nobj * Ndim * sizeof(double));
     double* edis = xmalloc(Ndat * sizeof(double));
     (void)smacofSSDistances(nobj, ndim, ndat, iind, jind, xold, edis);
     for (int k = 0; k < Nobj * Ndim; k++) {
         xtmp[k] = 0.0;
     }
-    double* bmat = xmalloc(Nobj * Nobj * sizeof(double));
     for (int k = 0; k < Ndat; k++) {
         int i = iind[k];
         int j = jind[k];
-        bmat[i + Nobj * j] = bmat[j + Nobj * i] = wght[k] * dhat[k] / edis[k];
-    }
-    for (int s = 0; s < Ndim; s++) {
-        int sobj = s * Nobj;
-        for (int i = 0; i < Nobj; i++) {
-            for (int j = 0; j < Nobj; j++) {
-                xtmp[i + sobj] +=
-                    bmat[i + Nobj * j] * (xold[i + sobj] - xold[j + sobj]);
-            }
+        double ecof = wght[k] * dhat[k] / edis[k];
+        for (int s = 0; s < Ndim; s++) {
+            int iobj = i + Nobj * s, jobj = j + Nobj * s;
+            double add = ecof * (xold[iobj] - xold[jobj]);
+            xtmp[iobj] += add;
+            xtmp[jobj] -= add;
         }
     }
     for (int k = 0; k < Nobj * Ndim; k++) {
-        if (weighted) {
+        if (Weighted) {
             xnew[k] = 0.0;
         } else {
             xnew[k] = xtmp[k];
         }
     }
-    if (weighted) {
+    if (Weighted) {
         for (int k = 0; k < Ndat; k++) {
             int i = iind[k];
             int j = jind[k];
-            bmat[i + Nobj * j] = bmat[j + Nobj * i] = vinv[k];
-        }
-        for (int s = 0; s < Ndim; s++) {
-            int sobj = s * Nobj;
-            for (int i = 0; i < Nobj; i++) {
-                for (int j = 0; j < Nobj; j++) {
-                    xnew[i + sobj] +=
-                        bmat[i + Nobj * j] * (xtmp[i + sobj] - xtmp[j + sobj]);
-                }
+            double ecof = -vinv[k];
+            for (int s = 0; s < Ndim; s++) {
+                int iobj = i + Nobj * s, jobj = j + Nobj * s;
+                double add = ecof * (xtmp[iobj] - xtmp[jobj]);
+                xnew[iobj] += add;
+                xnew[jobj] -= add;
             }
         }
     } else {
@@ -180,7 +175,6 @@ void smacofSSGuttmanTransform(const int* nobj, const int* ndim, const int* ndat,
         }
     }
     xfree(xtmp);
-    xfree(bmat);
     xfree(edis);
     return;
 }

@@ -1,3 +1,3 @@
 data(ekman, package = "smacof")
-ekman <- as.matrix(1 - ekman)
+ekmansource("acxEkman.R") <- as.matrix(1 - ekman)
 

@@ -1,7 +1,7 @@
 #include "smacofSS.h"
 
 void smacofSSEngine(const int* nobj, const int* ndim, const int* ndat,
-                    const int* nord, const int* safe, int* itel,
+                    const int* nord, const int* safe, int* itel, int *kord,
                     const int* ties, const int* itmax, const int* digits,
                     const int* width, const int* verbose, const int* ordinal,
                     const int* weighted, double* sold, double* snew,
@@ -13,7 +13,7 @@ void smacofSSEngine(const int* nobj, const int* ndim, const int* ndat,
     double smid = 0.0, difx = 0.0;
     (void)smacofMPInverseV(nobj, ndat, iind, jind, wght, vinv);
     while (true) {
-        (void)smacofSSMajorize(nobj, ndim, ndat, itel, nord, iind, jind, iord,
+        (void)smacofSSMajorize(nobj, ndim, ndat, itel, kord, nord, iind, jind, iord,
                                safe, weighted, wght, vinv, dhat, xold, xnew);
         (void)smacofSSDistances(nobj, ndim, ndat, iind, jind, xnew, edis);
         smid = smacofSSLoss(ndat, edis, dhat, wght);
@@ -34,11 +34,11 @@ void smacofSSEngine(const int* nobj, const int* ndim, const int* ndat,
         }
         if (*verbose) {
             if (*ordinal) {
-                printf("itel %4d difx %*.*f sold %*.*f smid %*.*f snew %*.*f\n",
-                       *itel, *width, *digits, difx, *width, *digits, *sold,
+                printf("itel %4d kord %4d difx %*.*f sold %*.*f smid %*.*f snew %*.*f\n",
+                       *itel, *kord, *width, *digits, difx, *width, *digits, *sold,
                        *width, *digits, smid, *width, *digits, *snew);
             } else {
-                printf("itel %4d difx %*.*f sold %*.*f snew %*.*f\n", *itel,
+                printf("itel %4d kord %4d difx %*.*f sold %*.*f snew %*.*f\n", *itel, *kord,
                        *width, *digits, difx, *width, *digits, *sold, *width,
                        *digits, *snew);
             }

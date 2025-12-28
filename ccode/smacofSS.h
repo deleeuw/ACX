@@ -40,12 +40,13 @@ void smacofMPInverseV(const int* nobj, const int* ndat, int* iind, int* jind, do
 // in smacofSSEngine.c
 
 void smacofSSEngine(const int* nobj, const int* ndim, const int* ndat,
-                    const int* nord, const int *safe, int* itel, const int* ties,
-                    const int* itmax, const int* digits, const int* width,
-                    const int* verbose, const int* ordinal, const int* weighted,
-                    double* sold, double* snew, const double* eps, int* iind,
-                    int* jind, int* iord, int* blks, double* wght, double* edis,
-                    double* dhat, double* xold, double* xnew);
+                    const int* nord, const int* safe, int* itel, int *kord,
+                    const int* ties, const int* itmax, const int* digits,
+                    const int* width, const int* verbose, const int* ordinal,
+                    const int* weighted, double* sold, double* snew,
+                    const double* eps, int* iind, int* jind, int* iord,
+                    int* blks, double* wght, double* edis, double* dhat,
+                    double* xold, double* xnew);
 
 double smacofSSLoss(const int* ndat, double* edis, double* dhat, double* wght); 
 
@@ -54,10 +55,10 @@ void smacofSSNormDhat(const int* ndat, double* dhat, double* wght);
 // in smacofSSMajorize.c
 
 void smacofSSMajorize(const int* nobj, const int* ndim, const int* ndat,
-                      const int* itel, const int* nord, int *iind, int* jind, 
-                      const int* iord, const int* safe, const int* weighted, 
-                      double* wght, double* vinv,  double* dhat, 
-                      double* xold, double* xnew);
+                      const int* itel, int *kord, const int* nord, int* iind, int* jind,
+                      const int* iord, const int* safe, const int* weighted,
+                      double* wght, double* vinv, double* dhat, double* xold,
+                      double* xnew);
 
 void smacofSSGuttmanTransform(const int* nobj, const int* ndim, const int* ndat, 
                               int* iind, int* jind, const int* weighted, 

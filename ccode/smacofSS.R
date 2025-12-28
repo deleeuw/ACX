@@ -25,6 +25,7 @@ smacofSS <- function(theData,
   nobj <- theData$nobj
   ndat <- theData$ndat
   itel <- 1
+  kord <- 0
   iind <- theData$iind
   jind <- theData$jind
   dhat <- theData$delta
@@ -57,6 +58,7 @@ smacofSS <- function(theData,
     nord = as.integer(nord),
     safe = as.integer(safe),
     itel = as.integer(itel),
+    kord = as.integer(kord),
     ties = as.integer(ties),
     itmax = as.integer(itmax),
     digits = as.integer(digits),
