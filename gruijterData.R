@@ -1,3 +1,5 @@
+source("smacofDataUtilities.R")
+
 gruijter <-
   structure(
     c(
@@ -47,4 +49,6 @@ gruijter <-
     Upper = FALSE
   )
 
-gruijter <- as.matrix(gruijter)
+gruijterDist <- gruijter
+gruijterMatrix <- as.matrix(gruijter)
+gruijterData <- makeMDSData(gruijterDist)
