@@ -18,7 +18,7 @@ smacofSS <- function(theData,
                      weighted = FALSE,
                      ordinal = FALSE) {
   if (is.null(xinit)) {
-    xinit <- smacofTorgerson(theData, 2)$conf
+    xinit <- smacofTorgerson(theData, ndim)$conf
   }
   xold <- xinit
   nord <- length(iord)

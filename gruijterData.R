@@ -52,3 +52,6 @@ gruijter <-
 gruijterDist <- gruijter
 gruijterMatrix <- as.matrix(gruijter)
 gruijterData <- makeMDSData(gruijterDist)
+gruijterLabels <- attr(gruijter, "Labels")
+
+
